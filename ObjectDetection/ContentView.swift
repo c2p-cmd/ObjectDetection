@@ -8,24 +8,34 @@
 import SwiftUI
 import Vision
 import AVKit
+import VideoToolbox
 
 struct ContentView: View {
-    var session = AVCaptureSession()
-    var config = MLModelConfiguration()
-    var dataOutput = AVCaptureVideoDataOutput()
-    var model: MLModel
+    private var session = AVCaptureSession()
+    private var config = MLModelConfiguration()
+    private var dataOutput = AVCaptureVideoDataOutput()
+    private var objectDetectionModel: VNCoreMLModel
+    private var imageSegmentationModel: VNCoreMLModel
+    
+    @State private var segmentationMap: SegmentationResultMLMultiArray?
+    @State private var name = "Object Name"
+    @State private var accuracy = "Accuracy 0%"
     
     init() {
         // Pass the configuration in to the initializer.
         do {
             let resnet = try Resnet50(configuration: config)
+            let deepLab = try DeepLabV3(configuration: config)
+            
             // Use the model if init was successful.
-            self.model = resnet.model
+            self.objectDetectionModel = try VNCoreMLModel(for: resnet.model)
+            self.imageSegmentationModel = try VNCoreMLModel(for: deepLab.model)
         } catch {
             // Handle the error if any.
             fatalError(error.localizedDescription)
         }
         session.beginConfiguration()
+        
         
         // Get the capture device
         DEVICE : if let frontCameraDevice = AVCaptureDevice.default(
@@ -33,7 +43,6 @@ struct ContentView: View {
             for: .video,
             position: .back
         ) {
-            
             // Set the capture device
             do {
                 try! session.addInput(AVCaptureDeviceInput(device: frontCameraDevice))
@@ -42,17 +51,16 @@ struct ContentView: View {
         
         // END Setting configuration properties
         session.commitConfiguration()
-        
-        // Start the AVCapture session
-        session.startRunning()
+    
+        startSessionAsync()
     }
     
-    @State private var name = "Object Name"
-    @State private var accuracy = "Accuracy 0%"
-    
     var body: some View {
-        return VStack {
-            Viewfinder(session: self.session, dataOutput: self.dataOutput, captureOutput: captureOutput)
+        VStack {
+            ZStack {
+                Viewfinder(session: self.session, dataOutput: self.dataOutput, captureOutput: self.captureOutput)
+                SegmentedDrawingView(segmentationMap: $segmentationMap)
+            }
             VStack {
                 Text(name)
                 Text(accuracy)
@@ -60,26 +68,61 @@ struct ContentView: View {
         }
     }
     
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    private func startSessionAsync() {
+        DispatchQueue.global(qos: .background).async {
+            // Start the AVCapture session
+            self.session.startRunning()
+        }
+    }
+    
+    private func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
-        guard let model = try? VNCoreMLModel(for: model) else { return }
-        let request = VNCoreMLRequest(model: model) { (finishedReq, err) in
-            
-            guard let results = finishedReq.results as? [VNClassificationObservation] else {return}
-            guard let firstObservation = results.first else {return}
+        let requests = [objectDetection(pixelBuffer), imageSegmentation(pixelBuffer)]
+        
+        try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform(requests)
+    }
+    
+    private func imageSegmentation(_ pixelBuffer: CVPixelBuffer) -> VNCoreMLRequest {
+        let request = VNCoreMLRequest(model: self.imageSegmentationModel, completionHandler: { finishedReq, err in
+            if let observations = finishedReq.results as? [VNCoreMLFeatureValueObservation],
+               let segmentationmap = observations.first?.featureValue.multiArrayValue {
+                let result = SegmentationResultMLMultiArray(mlMultiArray: segmentationmap)
+                self.segmentationMap = result
+            }
+        })
+        
+        request.imageCropAndScaleOption = .scaleFill
+        
+        return request
+    }
+    
+    private func objectDetection(_ pixelBuffer: CVPixelBuffer) -> VNCoreMLRequest {
+        let request = VNCoreMLRequest(model: self.objectDetectionModel) { (finishedReq, err) in
+            guard let results = finishedReq.results as? [VNClassificationObservation] else { return }
+            guard let firstObservation = results.first else { return }
             
             let name: String = firstObservation.identifier
             let acc: Int = Int(firstObservation.confidence * 100)
             
-            DispatchQueue.main.async {
-                self.name = name
-                self.accuracy = "Accuracy: \(acc)%"
-            }
-            
+            self.name = name
+            self.accuracy = "Accuracy: \(acc)%"
         }
         
-        try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
+        return request
+    }
+}
+
+extension UIImage {
+    public convenience init?(pixelBuffer: CVPixelBuffer) {
+        var cgImage: CGImage?
+        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+
+        guard let cgImage = cgImage else {
+            return nil
+        }
+
+        self.init(cgImage: cgImage)
     }
 }
 

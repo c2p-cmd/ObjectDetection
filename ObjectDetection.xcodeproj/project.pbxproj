@@ -7,15 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00DE618A2A04063A00C474F0 /* ViewFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE61892A04063A00C474F0 /* ViewFinder.swift */; };
+		00DE618E2A04069500C474F0 /* SegmentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE618D2A04069500C474F0 /* SegmentationView.swift */; };
+		00E0ACEC2A03F7B700CEF456 /* DeepLabV3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 00E0ACE92A03F7B700CEF456 /* DeepLabV3.mlmodel */; };
+		00E0ACED2A03F7B700CEF456 /* DeepLabV3FP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 00E0ACEA2A03F7B700CEF456 /* DeepLabV3FP16.mlmodel */; };
+		00E0ACEE2A03F7B700CEF456 /* DeepLabV3Int8LUT.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 00E0ACEB2A03F7B700CEF456 /* DeepLabV3Int8LUT.mlmodel */; };
+		00E0ACF02A03F83C00CEF456 /* SegmentationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E0ACEF2A03F83C00CEF456 /* SegmentationResult.swift */; };
 		00F8020829F9840F003D4E81 /* ObjectDetectionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F8020729F9840F003D4E81 /* ObjectDetectionApp.swift */; };
 		00F8020A29F9840F003D4E81 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F8020929F9840F003D4E81 /* ContentView.swift */; };
 		00F8020C29F98410003D4E81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00F8020B29F98410003D4E81 /* Assets.xcassets */; };
 		00F8020F29F98410003D4E81 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00F8020E29F98410003D4E81 /* Preview Assets.xcassets */; };
 		00F8021629F9846B003D4E81 /* Resnet50.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 00F8021529F9846B003D4E81 /* Resnet50.mlmodel */; };
-		00F8021D29F9877D003D4E81 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F8021C29F9877D003D4E81 /* Views.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00DE61892A04063A00C474F0 /* ViewFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFinder.swift; sourceTree = "<group>"; };
+		00DE618D2A04069500C474F0 /* SegmentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationView.swift; sourceTree = "<group>"; };
+		00E0ACE92A03F7B700CEF456 /* DeepLabV3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = DeepLabV3.mlmodel; sourceTree = "<group>"; };
+		00E0ACEA2A03F7B700CEF456 /* DeepLabV3FP16.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = DeepLabV3FP16.mlmodel; sourceTree = "<group>"; };
+		00E0ACEB2A03F7B700CEF456 /* DeepLabV3Int8LUT.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = DeepLabV3Int8LUT.mlmodel; sourceTree = "<group>"; };
+		00E0ACEF2A03F83C00CEF456 /* SegmentationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationResult.swift; sourceTree = "<group>"; };
 		00F8020429F9840F003D4E81 /* ObjectDetection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectDetection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00F8020729F9840F003D4E81 /* ObjectDetectionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDetectionApp.swift; sourceTree = "<group>"; };
 		00F8020929F9840F003D4E81 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -23,7 +34,6 @@
 		00F8020E29F98410003D4E81 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		00F8021529F9846B003D4E81 /* Resnet50.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Resnet50.mlmodel; sourceTree = "<group>"; };
 		00F8021929F98563003D4E81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		00F8021C29F9877D003D4E81 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +47,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00DE61872A04061500C474F0 /* MLMODELS */ = {
+			isa = PBXGroup;
+			children = (
+				00E0ACE92A03F7B700CEF456 /* DeepLabV3.mlmodel */,
+				00E0ACEA2A03F7B700CEF456 /* DeepLabV3FP16.mlmodel */,
+				00E0ACEB2A03F7B700CEF456 /* DeepLabV3Int8LUT.mlmodel */,
+				00F8021529F9846B003D4E81 /* Resnet50.mlmodel */,
+			);
+			path = MLMODELS;
+			sourceTree = "<group>";
+		};
+		00DE61882A04062700C474F0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				00DE61892A04063A00C474F0 /* ViewFinder.swift */,
+				00DE618D2A04069500C474F0 /* SegmentationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		00DE618F2A0406B600C474F0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				00E0ACEF2A03F83C00CEF456 /* SegmentationResult.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		00F801FB29F9840F003D4E81 = {
 			isa = PBXGroup;
 			children = (
@@ -56,13 +94,14 @@
 		00F8020629F9840F003D4E81 /* ObjectDetection */ = {
 			isa = PBXGroup;
 			children = (
+				00DE618F2A0406B600C474F0 /* Helpers */,
+				00DE61882A04062700C474F0 /* Views */,
+				00DE61872A04061500C474F0 /* MLMODELS */,
 				00F8021929F98563003D4E81 /* Info.plist */,
-				00F8021529F9846B003D4E81 /* Resnet50.mlmodel */,
 				00F8020729F9840F003D4E81 /* ObjectDetectionApp.swift */,
 				00F8020929F9840F003D4E81 /* ContentView.swift */,
 				00F8020B29F98410003D4E81 /* Assets.xcassets */,
 				00F8020D29F98410003D4E81 /* Preview Content */,
-				00F8021C29F9877D003D4E81 /* Views.swift */,
 			);
 			path = ObjectDetection;
 			sourceTree = "<group>";
@@ -145,10 +184,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00F8021D29F9877D003D4E81 /* Views.swift in Sources */,
+				00E0ACF02A03F83C00CEF456 /* SegmentationResult.swift in Sources */,
+				00E0ACED2A03F7B700CEF456 /* DeepLabV3FP16.mlmodel in Sources */,
+				00DE618A2A04063A00C474F0 /* ViewFinder.swift in Sources */,
+				00DE618E2A04069500C474F0 /* SegmentationView.swift in Sources */,
 				00F8020A29F9840F003D4E81 /* ContentView.swift in Sources */,
 				00F8021629F9846B003D4E81 /* Resnet50.mlmodel in Sources */,
+				00E0ACEC2A03F7B700CEF456 /* DeepLabV3.mlmodel in Sources */,
 				00F8020829F9840F003D4E81 /* ObjectDetectionApp.swift in Sources */,
+				00E0ACEE2A03F7B700CEF456 /* DeepLabV3Int8LUT.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
