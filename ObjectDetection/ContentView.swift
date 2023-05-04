@@ -78,12 +78,12 @@ struct ContentView: View {
     private func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
-        let requests = [objectDetection(pixelBuffer), imageSegmentation(pixelBuffer)]
+        let requests = [objectDetection(), imageSegmentation()]
         
         try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform(requests)
     }
     
-    private func imageSegmentation(_ pixelBuffer: CVPixelBuffer) -> VNCoreMLRequest {
+    private func imageSegmentation() -> VNCoreMLRequest {
         let request = VNCoreMLRequest(model: self.imageSegmentationModel, completionHandler: { finishedReq, err in
             if let observations = finishedReq.results as? [VNCoreMLFeatureValueObservation],
                let segmentationmap = observations.first?.featureValue.multiArrayValue {
@@ -97,7 +97,7 @@ struct ContentView: View {
         return request
     }
     
-    private func objectDetection(_ pixelBuffer: CVPixelBuffer) -> VNCoreMLRequest {
+    private func objectDetection() -> VNCoreMLRequest {
         let request = VNCoreMLRequest(model: self.objectDetectionModel) { (finishedReq, err) in
             guard let results = finishedReq.results as? [VNClassificationObservation] else { return }
             guard let firstObservation = results.first else { return }
