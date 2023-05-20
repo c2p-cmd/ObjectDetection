@@ -88,10 +88,13 @@ struct ContentView_ObjectDetectionOnly: View {
             let name: String = firstObservation.identifier
             let acc: Int = Int(firstObservation.confidence * 100)
             
+            let oldName = self.name
             self.name = "DetectedObjectName: \(name)"
             self.accuracy = "Accuracy: \(acc)%"
             
-            self.speechModel.textToSpeech(textToSpeak: name)
+            if self.name != oldName {
+                self.speechModel.textToSpeech(textToSpeak: name)
+            }
         }
         
         return request

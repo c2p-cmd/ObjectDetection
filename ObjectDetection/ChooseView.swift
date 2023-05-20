@@ -18,14 +18,6 @@ struct ChooseView: View {
                 
                 Spacer()
                 
-                NavigationLink("Realtime") {
-                    ContentView()
-                }
-                .font(.title)
-                .monospaced()
-                
-                Spacer()
-                
                 NavigationLink("Realtime Only Object Detection") {
                     ContentView_ObjectDetectionOnly()
                 }
