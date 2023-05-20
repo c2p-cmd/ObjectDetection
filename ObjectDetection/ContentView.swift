@@ -12,8 +12,8 @@ import VideoToolbox
 
 struct ContentView: View {
     private var session = AVCaptureSession()
-    private var config = MLModelConfiguration()
     private var dataOutput = AVCaptureVideoDataOutput()
+    private var config = MLModelConfiguration()
     private var objectDetectionModel: VNCoreMLModel
     private var imageSegmentationModel: VNCoreMLModel
     

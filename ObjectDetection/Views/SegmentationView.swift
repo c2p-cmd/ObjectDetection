@@ -31,7 +31,7 @@ class DrawingSegmentationView: UIView {
     private var blackWhiteColor: [Int32 : UIColor] = [
         7: UIColor(red: 1, green: 0, blue: 0, alpha: 1),
         0: UIColor(red: 0, green: 1, blue: 0, alpha: 1),
-        15: UIColor(white: 0.5, alpha: 0)
+        15: UIColor(white: 0.5, alpha: 1)
     ]
     
     func segmentationColor(with index: Int32) -> UIColor {

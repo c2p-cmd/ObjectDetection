@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00A47FAA2A1895CB0002E8CF /* ContentView_ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A47FA92A1895CB0002E8CF /* ContentView_ImagePicker.swift */; };
+		00A47FAC2A1896A30002E8CF /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A47FAB2A1896A30002E8CF /* ImagePickerView.swift */; };
 		00DE618A2A04063A00C474F0 /* ViewFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE61892A04063A00C474F0 /* ViewFinder.swift */; };
 		00DE618E2A04069500C474F0 /* SegmentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DE618D2A04069500C474F0 /* SegmentationView.swift */; };
 		00E0ACEC2A03F7B700CEF456 /* DeepLabV3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 00E0ACE92A03F7B700CEF456 /* DeepLabV3.mlmodel */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00A47FA92A1895CB0002E8CF /* ContentView_ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView_ImagePicker.swift; sourceTree = "<group>"; };
+		00A47FAB2A1896A30002E8CF /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		00DE61892A04063A00C474F0 /* ViewFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFinder.swift; sourceTree = "<group>"; };
 		00DE618D2A04069500C474F0 /* SegmentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationView.swift; sourceTree = "<group>"; };
 		00E0ACE92A03F7B700CEF456 /* DeepLabV3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = DeepLabV3.mlmodel; sourceTree = "<group>"; };
@@ -63,6 +67,7 @@
 			children = (
 				00DE61892A04063A00C474F0 /* ViewFinder.swift */,
 				00DE618D2A04069500C474F0 /* SegmentationView.swift */,
+				00A47FAB2A1896A30002E8CF /* ImagePickerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -102,6 +107,7 @@
 				00F8020929F9840F003D4E81 /* ContentView.swift */,
 				00F8020B29F98410003D4E81 /* Assets.xcassets */,
 				00F8020D29F98410003D4E81 /* Preview Content */,
+				00A47FA92A1895CB0002E8CF /* ContentView_ImagePicker.swift */,
 			);
 			path = ObjectDetection;
 			sourceTree = "<group>";
@@ -187,9 +193,11 @@
 				00E0ACF02A03F83C00CEF456 /* SegmentationResult.swift in Sources */,
 				00E0ACED2A03F7B700CEF456 /* DeepLabV3FP16.mlmodel in Sources */,
 				00DE618A2A04063A00C474F0 /* ViewFinder.swift in Sources */,
+				00A47FAC2A1896A30002E8CF /* ImagePickerView.swift in Sources */,
 				00DE618E2A04069500C474F0 /* SegmentationView.swift in Sources */,
 				00F8020A29F9840F003D4E81 /* ContentView.swift in Sources */,
 				00F8021629F9846B003D4E81 /* Resnet50.mlmodel in Sources */,
+				00A47FAA2A1895CB0002E8CF /* ContentView_ImagePicker.swift in Sources */,
 				00E0ACEC2A03F7B700CEF456 /* DeepLabV3.mlmodel in Sources */,
 				00F8020829F9840F003D4E81 /* ObjectDetectionApp.swift in Sources */,
 				00E0ACEE2A03F7B700CEF456 /* DeepLabV3Int8LUT.mlmodel in Sources */,

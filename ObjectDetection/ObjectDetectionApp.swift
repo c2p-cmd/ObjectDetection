@@ -11,7 +11,8 @@ import SwiftUI
 struct ObjectDetectionApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            // ContentView()
+             ContentView_ImagePicker()
         }
     }
 }
