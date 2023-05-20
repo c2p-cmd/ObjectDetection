@@ -1,24 +1,22 @@
 //
-//  ContentView.swift
+//  ContentView_ObjectDetectionOnly.swift
 //  ObjectDetection
 //
-//  Created by Sharan Thakur on 26/04/23.
+//  Created by Sharan Thakur on 20/05/23.
 //
 
-import SwiftUI
 import Vision
-import AVKit
-import VideoToolbox
+import SwiftUI
+import AVFoundation
 
-struct ContentView: View {
+struct ContentView_ObjectDetectionOnly: View {
     private var session = AVCaptureSession()
     private var dataOutput = AVCaptureVideoDataOutput()
     private var config = MLModelConfiguration()
     private var objectDetectionModel: VNCoreMLModel
-    private var imageSegmentationModel: VNCoreMLModel
     private var speechModel = SpeechModel()
     
-    @State private var segmentationMap: SegmentationResultMLMultiArray?
+    // Binding
     @State private var name = "Object Name"
     @State private var accuracy = "Accuracy 0%"
     
@@ -26,17 +24,14 @@ struct ContentView: View {
         // Pass the configuration in to the initializer.
         do {
             let resnet = try Resnet50(configuration: config)
-            let deepLab = try DeepLabV3(configuration: config)
             
             // Use the model if init was successful.
             self.objectDetectionModel = try VNCoreMLModel(for: resnet.model)
-            self.imageSegmentationModel = try VNCoreMLModel(for: deepLab.model)
         } catch {
             // Handle the error if any.
             fatalError(error.localizedDescription)
         }
         session.beginConfiguration()
-        
         
         // Get the capture device
         DEVICE : if let frontCameraDevice = AVCaptureDevice.default(
@@ -59,8 +54,11 @@ struct ContentView: View {
     var body: some View {
         VStack {
             ZStack {
-                Viewfinder(session: self.session, dataOutput: self.dataOutput, captureOutput: self.captureOutput)
-                SegmentedDrawingView(segmentationMap: $segmentationMap)
+                Viewfinder(
+                    session: self.session,
+                    dataOutput: self.dataOutput,
+                    captureOutput: self.captureOutput
+                )
             }
             VStack {
                 Text(name)
@@ -68,36 +66,15 @@ struct ContentView: View {
             }.padding()
         }.onDisappear {
             speechModel.stopSpeech()
-        }.navigationTitle("Realtime Image Segmentation & Object Detection")
-    }
-    
-    private func startSessionAsync() {
-        DispatchQueue.global(qos: .background).async {
-            // Start the AVCapture session
-            self.session.startRunning()
-        }
+        }.navigationTitle("Realtime Object Detection")
     }
     
     private func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
-        let requests = [objectDetection(), imageSegmentation()]
+        let requests = [objectDetection()]
         
         try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform(requests)
-    }
-    
-    private func imageSegmentation() -> VNCoreMLRequest {
-        let request = VNCoreMLRequest(model: self.imageSegmentationModel, completionHandler: { finishedReq, err in
-            if let observations = finishedReq.results as? [VNCoreMLFeatureValueObservation],
-               let segmentationmap = observations.first?.featureValue.multiArrayValue {
-                let result = SegmentationResultMLMultiArray(mlMultiArray: segmentationmap)
-                self.segmentationMap = result
-            }
-        })
-        
-        request.imageCropAndScaleOption = .scaleFill
-        
-        return request
     }
     
     private func objectDetection() -> VNCoreMLRequest {
@@ -119,10 +96,11 @@ struct ContentView: View {
         
         return request
     }
+    
+    private func startSessionAsync() {
+        DispatchQueue.global(qos: .background).async {
+            // Start the AVCapture session
+            self.session.startRunning()
+        }
+    }
 }
-
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}

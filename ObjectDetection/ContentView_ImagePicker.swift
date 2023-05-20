@@ -16,6 +16,9 @@ struct ContentView_ImagePicker: View {
     private var imageSegmentationModel: VNCoreMLModel
     @State private var segmentationMap: SegmentationResultMLMultiArray?
     
+    // SpeechModel
+    private var speechModel = SpeechModel()
+    
     // UI stuff
     @State private var toShowPicker = false
     @State private var uiImage: UIImage
@@ -74,6 +77,9 @@ struct ContentView_ImagePicker: View {
             Spacer()
             Button("Pick From Gallery", action: buttonAction)
         }
+        .onDisappear {
+            speechModel.stopSpeech()
+        }
         .padding(.vertical, 50)
         .padding(.horizontal, 20)
         .sheet(isPresented: self.$toShowPicker) {
@@ -82,6 +88,7 @@ struct ContentView_ImagePicker: View {
                 completionHandler: onNewImage
             )
         }
+        .navigationTitle("Non-Realtime Image Segmentation & Object Detection")
     }
     
     private func onNewImage(_ newImage: UIImage) {
@@ -121,6 +128,8 @@ struct ContentView_ImagePicker: View {
             
             self.name = "Object: \(name.capitalized)"
             self.accuracy = "Accuracy: \(acc)%"
+            
+            speechModel.textToSpeech(textToSpeak: name)
         }
         
         return request
