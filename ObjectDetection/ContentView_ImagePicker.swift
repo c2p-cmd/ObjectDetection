@@ -20,15 +20,18 @@ struct ContentView_ImagePicker: View {
     private var speechModel = SpeechModel()
     
     // UI stuff
+    @State private var isMute = false
     @State private var toShowPicker = false
     @State private var uiImage: UIImage
     private let defaultImage = UIImage(systemName: "photo.fill")!
     @State private var name = "Object Name"
     @State private var accuracy = "Accuracy 0%"
+    @State private var isLoading = false
     
     init() {
         // Pass the configuration in to the initializer.
         do {
+            config.allowLowPrecisionAccumulationOnGPU = true
             let resnet = try Resnet50(configuration: config)
             let deepLab = try DeepLabV3(configuration: config)
             
@@ -45,6 +48,16 @@ struct ContentView_ImagePicker: View {
     
     var body: some View {
         VStack(alignment: .center) {
+            HStack {
+                Spacer()
+                Button {
+                    withAnimation {
+                        self.isMute.toggle()
+                    }
+                } label: {
+                    Image(systemName: isMute ? "speaker.slash" : "speaker")
+                }
+            }
             Text("Pick An Image\nFor Image Segmentation\nObject Detection")
                 .font(.title3)
                 .bold()
@@ -76,6 +89,10 @@ struct ContentView_ImagePicker: View {
             }.padding()
             Spacer()
             Button("Pick From Gallery", action: buttonAction)
+                .disabled(isLoading)
+            if isLoading {
+                ProgressView()
+            }
         }
         .onDisappear {
             speechModel.stopSpeech()
@@ -92,6 +109,7 @@ struct ContentView_ImagePicker: View {
     }
     
     private func onNewImage(_ newImage: UIImage) {
+        self.isLoading = true
         let requests = [imageSegmentation(), objectDetection()]
         
         guard let imageData = newImage.pngData() else {
@@ -99,20 +117,26 @@ struct ContentView_ImagePicker: View {
         }
         
         try! VNImageRequestHandler(data: imageData).perform(requests)
+        isLoading = false
     }
     
     private func imageSegmentation() -> VNCoreMLRequest {
-        let request = VNCoreMLRequest(model: self.imageSegmentationModel, completionHandler: { finishedReq, err in
-            if let observations = finishedReq.results as? [VNCoreMLFeatureValueObservation],
-               let segmentationmap = observations.first?.featureValue.multiArrayValue {
-                let result = SegmentationResultMLMultiArray(mlMultiArray: segmentationmap)
-                self.segmentationMap = result
-            }
-        })
+        let request = VNCoreMLRequest(
+            model: self.imageSegmentationModel,
+            completionHandler: onRequestComplete
+        )
         
         request.imageCropAndScaleOption = .scaleFill
         
         return request
+    }
+    
+    private func onRequestComplete(finishedReq: VNRequest, err: Error?) {
+        if let observations = finishedReq.results as? [VNCoreMLFeatureValueObservation],
+           let segmentationmap = observations.first?.featureValue.multiArrayValue {
+            let result = SegmentationResultMLMultiArray(mlMultiArray: segmentationmap)
+            self.segmentationMap = result
+        }
     }
     
     private func objectDetection() -> VNCoreMLRequest {
@@ -129,7 +153,9 @@ struct ContentView_ImagePicker: View {
             self.name = "Object: \(name.capitalized)"
             self.accuracy = "Accuracy: \(acc)%"
             
-            speechModel.textToSpeech(textToSpeak: name)
+            if !isMute {
+                speechModel.textToSpeech(textToSpeak: name)
+            }
         }
         
         return request

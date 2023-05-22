@@ -72,7 +72,7 @@ class DrawingSegmentationView: UIView {
                     
                     let rect: CGRect = CGRect(x: CGFloat(i) * w, y: CGFloat(j) * h, width: w, height: h)
                     
-                    print(value)
+                    // print(value)
                     let color: UIColor = segmentationColor(with: value)
                     
                     color.setFill()
