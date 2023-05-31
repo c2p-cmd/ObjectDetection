@@ -131,7 +131,10 @@ struct ContentView_ImagePicker: View {
         return request
     }
     
-    private func onRequestComplete(finishedReq: VNRequest, err: Error?) {
+    private func onRequestComplete(
+        finishedReq: VNRequest,
+        err: Error?
+    ) {
         if let observations = finishedReq.results as? [VNCoreMLFeatureValueObservation],
            let segmentationmap = observations.first?.featureValue.multiArrayValue {
             let result = SegmentationResultMLMultiArray(mlMultiArray: segmentationmap)
